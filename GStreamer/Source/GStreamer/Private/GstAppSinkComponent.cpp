@@ -5,62 +5,62 @@
 
 UGstAppSinkComponent::UGstAppSinkComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+    PrimaryComponentTick.bCanEverTick = true;
 }
 
 void UGstAppSinkComponent::UninitializeComponent()
 {
-	ResetState();
+    ResetState();
 }
 
 void UGstAppSinkComponent::ResetState()
 {
-	if (AppSink) AppSink->Disconnect();
-	SafeDestroy(Texture);
-	SafeDestroy(AppSink);
+    if (AppSink)
+        AppSink->Disconnect();
+    SafeDestroy(Texture);
+    SafeDestroy(AppSink);
 }
 
-void UGstAppSinkComponent::CbPipelineStart(IGstPipeline* Pipeline)
+void UGstAppSinkComponent::CbPipelineStart(IGstPipeline *Pipeline)
 {
-	ResetState();
+    ResetState();
 
-	if (AppSinkEnabled && !AppSinkName.IsEmpty())
-	{
-		AppSink = IGstAppSink::CreateInstance(TCHAR_TO_ANSI(*AppSinkName));
-		Texture = new FGstTexture(AppSinkName, AppSink, this);
-		AppSink->Connect(Pipeline, TCHAR_TO_ANSI(*AppSinkName), this);
-	}
+    if (AppSinkEnabled && !AppSinkName.IsEmpty())
+    {
+        AppSink = IGstAppSink::CreateInstance(TCHAR_TO_ANSI(*AppSinkName));
+        Texture = new FGstTexture(AppSinkName, AppSink, this);
+        AppSink->Connect(Pipeline, TCHAR_TO_ANSI(*AppSinkName), this);
+    }
 }
 
 void UGstAppSinkComponent::CbPipelineStop()
 {
-	ResetState();
+    ResetState();
 }
 
-void UGstAppSinkComponent::CbGstSampleReceived(IGstSample* Sample)
+void UGstAppSinkComponent::CbGstSampleReceived(IGstSample *Sample)
 {
-	Texture->SubmitSample(Sample);
+    Texture->SubmitSample(Sample);
 }
 
 void UGstAppSinkComponent::CbGstTextureCreated()
 {
-	if (OnGstTextureCreated.IsBound())
-	{
-		auto This = this;
-		AsyncTask(ENamedThreads::GameThread, [This]()
-		{
-			auto Tex = This->Texture;
-			This->OnGstTextureCreated.Broadcast(This, Tex->GetTextureObject(), Tex->GetGstFormat(), Tex->GetWidth(), Tex->GetHeight());
-		});
-	}
+    if (OnGstTextureCreated.IsBound())
+    {
+        auto This = this;
+        AsyncTask(ENamedThreads::GameThread, [This]() {
+            auto Tex = This->Texture;
+            This->OnGstTextureCreated.Broadcast(This, Tex->GetTextureObject(), Tex->GetGstFormat(), Tex->GetWidth(), Tex->GetHeight());
+        });
+    }
 }
 
-void UGstAppSinkComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UGstAppSinkComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (Texture)
-	{
-		Texture->TickGameThread();
-	}
+    if (Texture)
+    {
+        Texture->TickGameThread();
+    }
 }

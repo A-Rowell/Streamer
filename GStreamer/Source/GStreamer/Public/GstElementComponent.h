@@ -4,18 +4,17 @@
 #include "Components/SceneComponent.h"
 #include "GstElementComponent.generated.h"
 
-UCLASS( ClassGroup=(Simbotic) )
+UCLASS(ClassGroup = (Simbotic))
 class GSTREAMER_API UGstElementComponent : public UActorComponent
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
-public:	
+public:
+    UGstElementComponent();
 
-	UGstElementComponent();
-
-	virtual void InitializeComponent() override;
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void UninitializeComponent() override;
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+    virtual void InitializeComponent() override;
+    virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+    virtual void UninitializeComponent() override;
+    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 };

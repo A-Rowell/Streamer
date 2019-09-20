@@ -9,48 +9,51 @@
 
 static ELogVerbosity::Type ConvertVerbosity(EGstVerbosity::Type GstVerbosity)
 {
-	switch (GstVerbosity)
-	{
-		case EGstVerbosity::Error: return ELogVerbosity::Error;
-		case EGstVerbosity::Warning: return ELogVerbosity::Warning;
-		case EGstVerbosity::Debug: return ELogVerbosity::Display;
-	}
-	return ELogVerbosity::Display;
+    switch (GstVerbosity)
+    {
+    case EGstVerbosity::Error:
+        return ELogVerbosity::Error;
+    case EGstVerbosity::Warning:
+        return ELogVerbosity::Warning;
+    case EGstVerbosity::Debug:
+        return ELogVerbosity::Display;
+    }
+    return ELogVerbosity::Display;
 }
 
-void GstLogA(const char* File, int Line, EGstVerbosity::Type Verbosity, const char* Format, ...)
+void GstLogA(const char *File, int Line, EGstVerbosity::Type Verbosity, const char *Format, ...)
 {
-	char Buffer[LOG_BUF_SIZE];
-	va_list Argptr;
-	va_start(Argptr, Format);
-	const int n = vsnprintf(Buffer, LOG_BUF_SIZE - 1, Format, Argptr);
-	va_end(Argptr);
+    char Buffer[LOG_BUF_SIZE];
+    va_list Argptr;
+    va_start(Argptr, Format);
+    const int n = vsnprintf(Buffer, LOG_BUF_SIZE - 1, Format, Argptr);
+    va_end(Argptr);
 
-	if (n > 0)
-	{
-		Buffer[n] = 0;
-		FString Message(ANSI_TO_TCHAR(Buffer));
-		FMsg::Logf_Internal(File, Line, LogGStreamer.GetCategoryName(), ConvertVerbosity(Verbosity), TEXT("%s"), *Message);
-	}
+    if (n > 0)
+    {
+        Buffer[n] = 0;
+        FString Message(ANSI_TO_TCHAR(Buffer));
+        FMsg::Logf_Internal(File, Line, LogGStreamer.GetCategoryName(), ConvertVerbosity(Verbosity), TEXT("%s"), *Message);
+    }
 }
 
-void GstLogW(const char* File, int Line, EGstVerbosity::Type Verbosity, const wchar_t* Format, ...)
+void GstLogW(const char *File, int Line, EGstVerbosity::Type Verbosity, const wchar_t *Format, ...)
 {
-	wchar_t Buffer[LOG_BUF_SIZE];
-	va_list Argptr;
-	va_start(Argptr, Format);
-	#if PLATFORM_WINDOWS
-		const int n = _vsnwprintf_s(Buffer, LOG_BUF_SIZE - 1, Format, Argptr);
-	#else
-		const int n = vswprintf(Buffer, LOG_BUF_SIZE - 1, Format, Argptr);
-	#endif
-	va_end(Argptr);
+    wchar_t Buffer[LOG_BUF_SIZE];
+    va_list Argptr;
+    va_start(Argptr, Format);
+#if PLATFORM_WINDOWS
+    const int n = _vsnwprintf_s(Buffer, LOG_BUF_SIZE - 1, Format, Argptr);
+#else
+    const int n = vswprintf(Buffer, LOG_BUF_SIZE - 1, Format, Argptr);
+#endif
+    va_end(Argptr);
 
-	if (n > 0)
-	{
-		Buffer[n] = 0;
-		FMsg::Logf_Internal(File, Line, LogGStreamer.GetCategoryName(), ConvertVerbosity(Verbosity), TEXT("%s"), Buffer);
-	}
+    if (n > 0)
+    {
+        Buffer[n] = 0;
+        FMsg::Logf_Internal(File, Line, LogGStreamer.GetCategoryName(), ConvertVerbosity(Verbosity), TEXT("%s"), Buffer);
+    }
 }
 
 // void* SysLoadLibrary(const wchar_t* Name)
@@ -69,5 +72,5 @@ void GstLogW(const char* File, int Line, EGstVerbosity::Type Verbosity, const wc
 // }
 
 #if defined(PROF_ENABLED)
-	#include "Profiler.inl"
+#include "Profiler.inl"
 #endif
