@@ -22,7 +22,7 @@ enum class EGstTextureFormat : unsigned char
 class IGstAppSrcCallback
 {
 public:
-    virtual void CbGstPushTexture() = 0;
+    virtual void CbGstPushData() = 0;
 };
 
 class IGstAppSrc
@@ -32,7 +32,7 @@ class IGstAppSrc
 public:
     virtual bool Connect(class IGstPipeline *Pipeline, const char *ElementName, IGstAppSrcCallback *Callback) = 0;
     virtual void Disconnect() = 0;
-    virtual void PushTexture(const uint8_t *TextureData, size_t TextureSize) = 0;
+    virtual void PushData(const uint8_t *Data, size_t Size) = 0;
 
     virtual int GetTextureWidth() = 0;
     virtual int GetTextureHeight() = 0;

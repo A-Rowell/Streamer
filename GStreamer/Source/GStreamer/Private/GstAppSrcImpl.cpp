@@ -26,7 +26,7 @@ public:
     virtual bool Connect(IGstPipeline *Pipeline, const char *ElementName, IGstAppSrcCallback *Callback);
     virtual void Disconnect();
 
-    virtual void PushTexture(const uint8_t *TextureData, size_t TextureSize);
+    virtual void PushData(const uint8_t *Data, size_t Size);
 
     virtual int GetTextureWidth()
     {
@@ -100,6 +100,9 @@ bool FGstAppSrcImpl::Connect(IGstPipeline *Pipeline, const char *ElementName, IG
             gchar *format;
             gint fps_n = 0, fps_d;
             GstStructure *st = gst_caps_get_structure(caps, 0);
+            const char *st_name = gst_structure_get_name(st);
+            gboolean klv_parsed;
+
             if (gst_structure_get(st,
                                   "width", G_TYPE_INT, &m_Width,
                                   "height", G_TYPE_INT, &m_Height,
@@ -108,12 +111,20 @@ bool FGstAppSrcImpl::Connect(IGstPipeline *Pipeline, const char *ElementName, IG
                                   NULL))
             {
                 m_Framerate = fps_n / fps_d;
-                GST_LOG_DBG_A("GstAppSrc: Found CAPS width:%i height:%i format:%s fps:%i", m_Width, m_Height, format, m_Framerate);
-                if (strncmp(format, "BGRA", 4) == 0)
+                GST_LOG_DBG_A("GstAppSrc: Found CAPS:%s width:%i height:%i format:%s fps:%i", st_name, m_Width, m_Height, format, m_Framerate);
+                if (strncmp(format, "BGRx", 4) == 0)
                 {
                     m_Format = EGstTextureFormat::GST_VIDEO_FORMAT_BGRA;
                 }
                 g_free(format);
+            }
+            else if (g_str_equal(st_name, "meta/x-klv") && gst_structure_get(st,
+                                                                           "parsed", G_TYPE_BOOLEAN, &klv_parsed,
+                                                                           "framerate", GST_TYPE_FRACTION, &fps_n, &fps_d,
+                                                                           NULL))
+            {
+                m_Framerate = fps_n / fps_d;
+                GST_LOG_DBG_A("GstAppSrc: Found CAPS:%s parsed:%i fps:%i", st_name, klv_parsed, m_Framerate);
             }
         }
         gst_caps_unref(caps);
@@ -151,10 +162,10 @@ void FGstAppSrcImpl::Disconnect()
     m_Timestamp = 0;
 }
 
-void FGstAppSrcImpl::PushTexture(const uint8_t *TextureData, size_t TextureSize)
+void FGstAppSrcImpl::PushData(const uint8_t* Data, size_t Size)
 {
-    GstBuffer *buffer = gst_buffer_new_allocate(nullptr, TextureSize, nullptr);
-    gst_buffer_fill(buffer, 0, TextureData, TextureSize);
+    GstBuffer *buffer = gst_buffer_new_allocate(nullptr, Size, nullptr);
+    gst_buffer_fill(buffer, 0, Data, Size);
 
     GST_BUFFER_PTS(buffer) = m_Timestamp;
     GST_BUFFER_DURATION(buffer) = gst_util_uint64_scale_int(1, GST_SECOND, m_Framerate);
@@ -167,5 +178,5 @@ void FGstAppSrcImpl::PushTexture(const uint8_t *TextureData, size_t TextureSize)
 
 void FGstAppSrcImpl::OnNeedData(GstElement *Sink, guint Size)
 {
-    m_Callback->CbGstPushTexture();
+    m_Callback->CbGstPushData();
 }

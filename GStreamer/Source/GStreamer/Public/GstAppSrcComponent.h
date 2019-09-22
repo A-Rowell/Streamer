@@ -1,9 +1,10 @@
 #pragma once
 
 #include "GstElementComponent.h"
+#include "Components/SceneCaptureComponent2D.h"
+#include "GstKlvComponent.h"
 #include "GstAppSrcImpl.h"
 #include "GstVideoFormat.h"
-#include "GstKlv.h"
 #include "GstAppSrcComponent.generated.h"
 
 UCLASS(ClassGroup = (Simbotic), meta = (BlueprintSpawnableComponent))
@@ -20,7 +21,7 @@ public:
 
 	virtual void CbPipelineStart(class IGstPipeline *Pipeline);
 	virtual void CbPipelineStop();
-	virtual void CbGstPushTexture();
+	virtual void CbGstPushData();
 
 	UPROPERTY(Category = "GstAppSrc", EditAnywhere, BlueprintReadWrite)
 	FString PipelineName;
@@ -31,16 +32,22 @@ public:
 	UPROPERTY(Category = "GstAppSrc", EditAnywhere, BlueprintReadWrite)
 	bool AppSrcEnabled;
 
-	UPROPERTY(Category = "GstAppSrc", EditAnywhere)
-	FComponentReference AppSrcCapture;
+	UPROPERTY(Category = "GstAppSrc", EditAnywhere, BlueprintReadWrite)
+	FString SrcVideo;
 
-	void SetKlv(TArray<FGstKlv> Klv);
+	UPROPERTY(Category = "GstAppSrc", EditAnywhere, BlueprintReadWrite)
+	FString SrcKlv;
+
+	UPROPERTY()
+	USceneCaptureComponent2D *SrcVideoComponent;
+
+	UPROPERTY()
+	UGstKlvComponent *SrcKlvComponent;
 
 protected:
 	void ResetState();
 
 	IGstAppSrc *AppSrc = nullptr;
-	TArray<FGstKlv> Klv;
 
 	bool NeedsData = false;
 };

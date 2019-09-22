@@ -1,6 +1,6 @@
 #include "GstAppSrcComponent.h"
 #include "GstPipelineImpl.h"
-#include "Components/SceneCaptureComponent2D.h"
+#include "GameFramework/Actor.h"
 #include "Engine/TextureRenderTarget2D.h"
 #include "Runtime/Core/Public/Async/Async.h"
 
@@ -17,6 +17,22 @@ void UGstAppSrcComponent::UninitializeComponent()
 void UGstAppSrcComponent::BeginPlay()
 {
     Super::BeginPlay();
+
+    AActor *Actor = GetOwner();
+    TArray<UActorComponent *> Components = Actor->GetComponentsByClass(UActorComponent::StaticClass());
+    for (UActorComponent *Component : Components)
+    {
+        if (Component->GetName() == SrcVideo)
+        {
+            SrcVideoComponent = Cast<USceneCaptureComponent2D>(Component);
+        }
+        else if (Component->GetName() == SrcKlv)
+        {
+            SrcKlvComponent = Cast<UGstKlvComponent>(Component);
+        }
+    }
+
+    GST_LOG_DBG_A("BeginPlay GstAppSrc:%s USceneCaptureComponent2D:%p UGstKlvComponent:%p", TCHAR_TO_ANSI(*GetName()), SrcVideoComponent, SrcKlvComponent);
 }
 
 void UGstAppSrcComponent::ResetState()
@@ -42,7 +58,7 @@ void UGstAppSrcComponent::CbPipelineStop()
     ResetState();
 }
 
-void UGstAppSrcComponent::CbGstPushTexture()
+void UGstAppSrcComponent::CbGstPushData()
 {
     NeedsData = true;
 }
@@ -53,10 +69,12 @@ void UGstAppSrcComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
     if (AppSrc)
     {
         AActor *Actor = GetOwner();
-        USceneCaptureComponent2D *CaptureComponent = Cast<USceneCaptureComponent2D>(AppSrcCapture.GetComponent(Actor));
-        if (CaptureComponent)
+
+        // GST_LOG_DBG_A("GstAppSrc:%s USceneCaptureComponent2D:%p UGstKlvComponent:%p NeedsData:%i", TCHAR_TO_ANSI(*GetName()), SrcVideoComponent, SrcKlvComponent, NeedsData);
+
+        if (SrcVideoComponent)
         {
-            UTextureRenderTarget2D *TextureTarget = CaptureComponent->TextureTarget;
+            UTextureRenderTarget2D *TextureTarget = SrcVideoComponent->TextureTarget;
             if (TextureTarget)
             {
                 if (NeedsData)
@@ -65,7 +83,7 @@ void UGstAppSrcComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
                     TArray<FColor> TextureData;
                     FTextureRenderTargetResource *TextureResource = TextureTarget->GameThread_GetRenderTargetResource();
                     TextureResource->ReadPixels(TextureData);
-                    AppSrc->PushTexture((uint8_t *)TextureData.GetData(), TextureData.Num() * 4);
+                    AppSrc->PushData((uint8_t *)TextureData.GetData(), TextureData.Num() * 4);
                 }
             }
             else if (AppSrc->GetTextureFormat() == EGstTextureFormat::GST_VIDEO_FORMAT_BGRA)
@@ -75,21 +93,25 @@ void UGstAppSrcComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
                 NewRenderTarget2D->RenderTargetFormat = ETextureRenderTargetFormat::RTF_RGBA8;
                 NewRenderTarget2D->InitAutoFormat(AppSrc->GetTextureWidth(), AppSrc->GetTextureHeight());
                 NewRenderTarget2D->UpdateResourceImmediate(true);
-                CaptureComponent->TextureTarget = NewRenderTarget2D;
+                SrcVideoComponent->TextureTarget = NewRenderTarget2D;
             }
             else
             {
                 GST_LOG_ERR(TEXT("GstAppSrc: Missing TextureTarget"));
             }
         }
-        else
+        else if (SrcKlvComponent)
         {
-            GST_LOG_ERR(TEXT("GstAppSrc: AppSrcCapture is not a USceneCaptureComponent2D"));
+            if (NeedsData)
+            {
+                std::vector<uint8_t> KlvData = SrcKlvComponent->GetKlvData();
+                if (KlvData.size() > 0)
+                {
+                    // GST_LOG_DBG_A("GstAppSrc: AppSrcCapture sending KLV");
+                    NeedsData = false;
+                    AppSrc->PushData(KlvData.data(), KlvData.size());
+                }
+            }
         }
     }
-}
-
-void UGstAppSrcComponent::SetKlv(TArray<FGstKlv> _Klv)
-{
-    Klv = _Klv;
 }
