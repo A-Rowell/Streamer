@@ -19,7 +19,7 @@ public:
     UPROPERTY(Category = "GstPipeline", EditAnywhere, BlueprintReadWrite)
     FString PipelineName;
 
-    UPROPERTY(Category = "GstPipeline", EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(Category = "GstPipeline", EditAnywhere, BlueprintReadWrite, meta = (MultiLine="true"))
     FString PipelineConfig;
 
     UPROPERTY(Category = "GstPipeline", EditAnywhere, BlueprintReadWrite)
