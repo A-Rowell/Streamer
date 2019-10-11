@@ -4,6 +4,8 @@
 #include "GstSampleImpl.h"
 #include "Runtime/Core/Public/Async/Async.h"
 
+#include <iostream>
+
 UGstAppSinkComponent::UGstAppSinkComponent()
 {
     PrimaryComponentTick.bCanEverTick = true;
@@ -46,8 +48,11 @@ void UGstAppSinkComponent::CbPipelineStart(IGstPipeline *Pipeline)
     if (AppSinkEnabled && !AppSinkName.IsEmpty())
     {
         AppSink = IGstAppSink::CreateInstance(TCHAR_TO_ANSI(*AppSinkName));
-        Texture = new FGstTexture(AppSinkName, AppSink, this);
         AppSink->Connect(Pipeline, TCHAR_TO_ANSI(*AppSinkName), this);
+        if (!AppSink->IsKlv())
+        {
+            Texture = new FGstTexture(AppSinkName, AppSink, this);
+        }
     }
 }
 
@@ -58,14 +63,20 @@ void UGstAppSinkComponent::CbPipelineStop()
 
 void UGstAppSinkComponent::CbGstTextureSampleReceived(IGstSample *Sample)
 {
-    Texture->SubmitSample(Sample);
+    if (Texture)
+    {
+        Texture->SubmitSample(Sample);
+    }
 }
 
 void UGstAppSinkComponent::CbGstKlvSampleReceived(IGstSample *Sample)
 {
+    size_t DataSize = Sample->GetDataSize();
+    uint8_t* Data = (uint8_t*)Sample->GetData();
+    std::cout << "Sample size: " << DataSize << " key: " << (uint32_t)Data[0] << std::endl;
     auto This = this;
     AsyncTask(ENamedThreads::GameThread, [This]() {
-        auto Tex = This->Texture;
+        check(IsInGameThread());
     });
 }
 
@@ -84,7 +95,6 @@ void UGstAppSinkComponent::CbGstTextureCreated()
 void UGstAppSinkComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
     if (Texture)
     {
         Texture->TickGameThread();

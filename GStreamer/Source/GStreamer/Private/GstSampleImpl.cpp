@@ -32,6 +32,7 @@ private:
     GstBuffer *m_Buffer = nullptr;
     GstMapInfo m_Mapping;
 
+    bool m_IsKlv = false;
     int m_Format = GST_VIDEO_FORMAT_UNKNOWN;
     int m_Width = 0;
     int m_Height = 0;
@@ -57,6 +58,7 @@ void FGstSampleImpl::Init(struct _GstSample *Sample)
 {
     Release();
 
+    m_IsKlv = true;
     m_Sample = Sample;
     m_Buffer = gst_sample_get_buffer(m_Sample);
 }

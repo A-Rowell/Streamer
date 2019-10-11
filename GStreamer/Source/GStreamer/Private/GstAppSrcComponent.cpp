@@ -60,7 +60,10 @@ void UGstAppSrcComponent::CbPipelineStop()
 
 void UGstAppSrcComponent::CbGstPushData()
 {
-    NeedsData = true;
+    auto This = this;
+    AsyncTask(ENamedThreads::GameThread, [This]() {
+        This->NeedsData = true;
+    });
 }
 
 void UGstAppSrcComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
