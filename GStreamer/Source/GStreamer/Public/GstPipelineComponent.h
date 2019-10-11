@@ -23,6 +23,12 @@ public:
     FString PipelineConfig;
 
     UPROPERTY(Category = "GstPipeline", EditAnywhere, BlueprintReadWrite)
+    FString PipelineConfigFile;
+
+    UPROPERTY(Category = "GstPipeline", EditAnywhere, BlueprintReadWrite)
+    bool PipelineUseFile;
+
+    UPROPERTY(Category = "GstPipeline", EditAnywhere, BlueprintReadWrite)
     bool PipelineAutostart;
 
     UFUNCTION(Category = "GstPipeline", BlueprintCallable)

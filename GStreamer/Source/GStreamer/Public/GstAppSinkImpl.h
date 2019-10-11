@@ -5,7 +5,8 @@
 class IGstAppSinkCallback
 {
 public:
-    virtual void CbGstSampleReceived(class IGstSample *Sample) = 0;
+    virtual void CbGstTextureSampleReceived(class IGstSample *Sample) = 0;
+    virtual void CbGstKlvSampleReceived(class IGstSample *Sample) = 0;
 };
 
 class IGstAppSink

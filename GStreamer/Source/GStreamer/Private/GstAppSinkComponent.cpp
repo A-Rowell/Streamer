@@ -1,5 +1,6 @@
 #include "GstAppSinkComponent.h"
 #include "GstPipelineImpl.h"
+#include "GameFramework/Actor.h"
 #include "GstSampleImpl.h"
 #include "Runtime/Core/Public/Async/Async.h"
 
@@ -11,6 +12,23 @@ UGstAppSinkComponent::UGstAppSinkComponent()
 void UGstAppSinkComponent::UninitializeComponent()
 {
     ResetState();
+}
+
+void UGstAppSinkComponent::BeginPlay()
+{
+    Super::BeginPlay();
+
+    AActor *Actor = GetOwner();
+    TArray<UActorComponent *> Components = Actor->GetComponentsByClass(UActorComponent::StaticClass());
+    for (UActorComponent *Component : Components)
+    {
+        if (Component->GetName() == SinkKlv)
+        {
+            SinkKlvComponent = Cast<UGstKlvComponent>(Component);
+        }
+    }
+
+    GST_LOG_DBG_A("BeginPlay GstAppSink:%s UGstKlvComponent:%p", TCHAR_TO_ANSI(*GetName()), SinkKlvComponent);
 }
 
 void UGstAppSinkComponent::ResetState()
@@ -38,9 +56,17 @@ void UGstAppSinkComponent::CbPipelineStop()
     ResetState();
 }
 
-void UGstAppSinkComponent::CbGstSampleReceived(IGstSample *Sample)
+void UGstAppSinkComponent::CbGstTextureSampleReceived(IGstSample *Sample)
 {
     Texture->SubmitSample(Sample);
+}
+
+void UGstAppSinkComponent::CbGstKlvSampleReceived(IGstSample *Sample)
+{
+    auto This = this;
+    AsyncTask(ENamedThreads::GameThread, [This]() {
+        auto Tex = This->Texture;
+    });
 }
 
 void UGstAppSinkComponent::CbGstTextureCreated()

@@ -11,6 +11,7 @@ class GSTREAMER_API UGstKlvComponent : public UGstElementComponent
 
 public:
     virtual std::vector<uint8_t> GetKlvData();
+    virtual void SetKlvData(const std::vector<uint8_t>& klv);
 
 protected:
 };

@@ -2,6 +2,8 @@
 #include "GstAppSinkComponent.h"
 #include "GstAppSrcComponent.h"
 #include "GameFramework/Actor.h"
+#include "Misc/Paths.h"
+#include "Misc/FileHelper.h"
 
 UGstPipelineComponent::UGstPipelineComponent()
 {
@@ -21,6 +23,12 @@ void UGstPipelineComponent::BeginPlay()
 {
     Super::BeginPlay();
 
+    if (PipelineUseFile)
+    {
+        FString ConfigFile = FPaths::ProjectConfigDir() + PipelineConfigFile;
+        GST_LOG_DBG_A("GstPipeline: Loading pipeline from file: %s", TCHAR_TO_ANSI(*ConfigFile));
+        FFileHelper::LoadFileToString(PipelineConfig, *ConfigFile);
+    }
     if (PipelineAutostart)
     {
         StartPipeline();

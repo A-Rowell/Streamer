@@ -8,6 +8,7 @@ class IGstSample
 
 public:
     virtual void Init(struct _GstSample *Sample, int Format, int Width, int Height) = 0;
+    virtual void Init(struct _GstSample *Sample) = 0;
     virtual void Release() = 0;
     virtual bool Map() = 0;
     virtual void Unmap() = 0;

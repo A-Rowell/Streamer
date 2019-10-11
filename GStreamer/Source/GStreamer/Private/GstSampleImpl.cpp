@@ -15,6 +15,8 @@ public:
     virtual void Destroy() { delete this; }
 
     virtual void Init(struct _GstSample *Sample, int Format, int Width, int Height);
+    virtual void Init(struct _GstSample *Sample);
+
     virtual void Release();
     virtual bool Map();
     virtual void Unmap();
@@ -49,6 +51,14 @@ void FGstSampleImpl::Init(struct _GstSample *Sample, int Format, int Width, int 
     m_Width = Width;
     m_Height = Height;
     m_Format = Format;
+}
+
+void FGstSampleImpl::Init(struct _GstSample *Sample)
+{
+    Release();
+
+    m_Sample = Sample;
+    m_Buffer = gst_sample_get_buffer(m_Sample);
 }
 
 void FGstSampleImpl::Release()

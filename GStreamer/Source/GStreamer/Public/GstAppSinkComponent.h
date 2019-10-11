@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GstElementComponent.h"
+#include "GstKlvComponent.h"
 #include "GstAppSinkImpl.h"
 #include "GstTexture.h"
 #include "GstVideoFormat.h"
@@ -16,12 +17,14 @@ class GSTREAMER_API UGstAppSinkComponent : public UGstElementComponent, public I
 public:
     UGstAppSinkComponent();
 
+    virtual void BeginPlay() override;
     virtual void UninitializeComponent() override;
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
     virtual void CbPipelineStart(class IGstPipeline *Pipeline);
     virtual void CbPipelineStop();
-    virtual void CbGstSampleReceived(class IGstSample *Sample);
+    virtual void CbGstTextureSampleReceived(class IGstSample *Sample);
+    virtual void CbGstKlvSampleReceived(class IGstSample *Sample);
     virtual void CbGstTextureCreated();
 
     UPROPERTY(Category = "GstAppSink", EditAnywhere, BlueprintReadWrite)
@@ -33,11 +36,17 @@ public:
     UPROPERTY(Category = "GstAppSink", EditAnywhere, BlueprintReadWrite)
     bool AppSinkEnabled;
 
+	UPROPERTY(Category = "GstAppSink", EditAnywhere, BlueprintReadWrite)
+	FString SinkKlv;
+
     UFUNCTION(Category = "GstAppSink", BlueprintCallable)
     UTexture2D *GetTexture() { return Texture->GetTextureObject(); }
 
     UPROPERTY(Category = "GstAppSink", BlueprintAssignable)
     FGstTextureCreatedSignature OnGstTextureCreated;
+
+	UPROPERTY()
+	UGstKlvComponent *SinkKlvComponent;
 
 protected:
     void ResetState();

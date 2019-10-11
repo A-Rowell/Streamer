@@ -98,6 +98,7 @@ bool FGstPipelineImpl::Init(const char *Name, const char *Config)
         gst_bus_add_watch(m_Bus, (GstBusFunc)BusMessageFunc, this);
 
         GST_LOG_DBG_A("GstPipeline: Init SUCCESS");
+        GST_DEBUG_BIN_TO_DOT_FILE(GST_BIN(m_Pipeline), GST_DEBUG_GRAPH_SHOW_ALL, "pipeline");
         return true;
     }
 

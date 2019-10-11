@@ -138,7 +138,7 @@ GstFlowReturn FGstAppSinkImpl::OnNewSample(GstElement *Sink)
 
             if (SampleObj->Map())
             {
-                m_Callback->CbGstSampleReceived(SampleObj);
+                m_Callback->CbGstTextureSampleReceived(SampleObj);
             }
             else
             {
@@ -147,8 +147,21 @@ GstFlowReturn FGstAppSinkImpl::OnNewSample(GstElement *Sink)
         }
         else
         {
-            gst_sample_unref(Sample);
+            GST_LOG_DBG_A("GstAppSink: <%s> OnKlvSample", m_Name.c_str());
+
+            auto SampleObj = AllocSample();
+            SampleObj->Init(Sample);
+
+            if (SampleObj->Map())
+            {
+                m_Callback->CbGstKlvSampleReceived(SampleObj);
+            }
+            ReleaseSample(SampleObj);
         }
+        // else
+        // {
+        //     gst_sample_unref(Sample);
+        // }
     }
 
     return GST_FLOW_OK;
