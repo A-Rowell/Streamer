@@ -72,11 +72,17 @@ void UGstAppSinkComponent::CbGstTextureSampleReceived(IGstSample *Sample)
 void UGstAppSinkComponent::CbGstKlvSampleReceived(IGstSample *Sample)
 {
     size_t DataSize = Sample->GetDataSize();
-    uint8_t* Data = (uint8_t*)Sample->GetData();
-    std::cout << "Sample size: " << DataSize << " key: " << (uint32_t)Data[0] << std::endl;
+    uint8_t *Data = (uint8_t *)Sample->GetData();
+    uint32_t Length = *((uint8_t *)Sample->GetData() + 1);
     auto This = this;
-    AsyncTask(ENamedThreads::GameThread, [This]() {
+    std::vector<uint8_t> Klv;
+    Klv.assign(Data, Data + 5 + Length);
+    AsyncTask(ENamedThreads::GameThread, [This, Klv]() {
         check(IsInGameThread());
+        if (This->SinkKlvComponent)
+        {
+            This->SinkKlvComponent->SetKlvData(Klv);
+        }
     });
 }
 

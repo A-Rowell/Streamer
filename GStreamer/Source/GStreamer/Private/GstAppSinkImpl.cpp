@@ -178,7 +178,7 @@ GstFlowReturn FGstAppSinkImpl::OnNewSample(GstElement *Sink)
 
         if (m_IsKlv)
         {
-            GST_LOG_DBG_A("GstAppSink: <%s> OnKlvSample", m_Name.c_str());
+            // GST_LOG_DBG_A("GstAppSink: <%s> OnKlvSample", m_Name.c_str());
 
             IGstSample *SampleObj = AllocSample();
             SampleObj->Init(Sample);
