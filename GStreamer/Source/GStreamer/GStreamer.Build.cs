@@ -5,8 +5,6 @@ public class GStreamer : ModuleRules
 {
     public GStreamer(ReadOnlyTargetRules Target) : base(Target)
     {
-        const string GStreamerRoot = @"/usr";
-
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
         bEnableUndefinedIdentifierWarnings = false;
 
@@ -24,15 +22,14 @@ public class GStreamer : ModuleRules
             }
         );
 
-        PublicIncludePaths.Add(Path.Combine(GStreamerRoot, "/usr/include/gstreamer-1.0"));
-        PublicIncludePaths.Add(Path.Combine(GStreamerRoot, "/usr/include/glib-2.0"));
-        PublicIncludePaths.Add(Path.Combine(GStreamerRoot, "/usr/lib/x86_64-linux-gnu/glib-2.0/include"));
-        PublicLibraryPaths.Add(Path.Combine(GStreamerRoot, "/usr/lib/x86_64-linux-gnu"));
+        PublicIncludePaths.Add("/usr/include/gstreamer-1.0");
+        PublicIncludePaths.Add("/usr/include/glib-2.0");
+        PublicIncludePaths.Add("/usr/lib/x86_64-linux-gnu/glib-2.0/include");
 
-        PublicAdditionalLibraries.Add("glib-2.0");
-        PublicAdditionalLibraries.Add("gobject-2.0");
-        PublicAdditionalLibraries.Add("gstreamer-1.0");
-        PublicAdditionalLibraries.Add("gstapp-1.0");
-        PublicAdditionalLibraries.Add("gstvideo-1.0");
+        PublicAdditionalLibraries.Add("/usr/lib/x86_64-linux-gnu/libglib-2.0.so");
+        PublicAdditionalLibraries.Add("/usr/lib/x86_64-linux-gnu/libgobject-2.0.so");
+        PublicAdditionalLibraries.Add("/usr/lib/x86_64-linux-gnu/libgstreamer-1.0.so");
+        PublicAdditionalLibraries.Add("/usr/lib/x86_64-linux-gnu/libgstapp-1.0.so");
+        PublicAdditionalLibraries.Add("/usr/lib/x86_64-linux-gnu/libgstvideo-1.0.so");
     }
 }
