@@ -4,7 +4,7 @@
 
 Engine:
 --------
-- Clone this repository in the `Plugins/Simbotic` directory of your UE4 project:
+- Clone this repository in the `Plugins/Simbotic` directory of your Simbotic Engine:
 
 ```
 git clone git@github.com:Simbotic/ue4-gst-plugin.git
