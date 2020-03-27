@@ -2,13 +2,14 @@
 
 # Setup
 
-- Clone this repository in the `Plugins` directory of your UE4 project:
+- Clone this repository in the `Plugins/Simbotic` directory of your UE4 project:
 
 ```
 git clone git@github.com:Simbotic/ue4-gst-plugin.git
 ```
+After that recompile the engine using `make` .
 
-- Update your `.uproject` adding the `Engine` as additional dependency and the `GStreamer` plugin:
+- Update your `.uproject` adding the `UE4 Gstreamer Plugin` as an additional dependency:
 
 ```
 ...,
