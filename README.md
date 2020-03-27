@@ -4,17 +4,17 @@
 
 Engine:
 --------
-- Clone this repository in the `Plugins/Simbotic` directory of your Simbotic Engine:
+- To use this plugin first `Clone` this repository in the `Plugins/Simbotic` directory of your  Engine:
 
 ```
 git clone git@github.com:Simbotic/ue4-gst-plugin.git
 ```
-- After clone, recompile the engine using `make` .
+- After clone the repository, recompile the engine using `make` .
 
 Project:
 --------
 
-- Update your `.uproject` adding the `UE4 Gstreamer Plugin` as an additional dependency:
+- To use the plugin on a project, update your `.uproject` adding the `UE4 Gstreamer Plugin` as an additional dependency on `.uproject`:
 
 ```
 ...,
