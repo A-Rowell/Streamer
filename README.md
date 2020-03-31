@@ -45,18 +45,71 @@ bUsePCHFiles = false;
 
 # Usage
 
-Blueprints:
+On Blueprints the Blueprint hierarchy you need:
 
-![gst-plugin-ue4 blueprints](docs/media/gst_pipeline.png)
+* `GstPipeline`.
+* 2 `GstAppSrc` these components will be named as `GstAppSrcRGB` and `GstAppSrcDepth`.
+* 2 `scene Capture Component 2D` these components will be named as `SceneCaptureRGB` and `SceneCaptureDepth`.
 
-GstAppSrc component:  
+
+
+![gst-plugin-ue4 blueprints](docs/media/BP_Components.png)
+
+# GstPipeline #
+![gst-plugin-ue4 blueprints](docs/media/GstPipelineConfig.png)
+
+*  `Pipeline Name` will be set as **robot** 
+* **Pipeline config** will set as:
+
+	> ``` appsrc name=sensor_rgb caps=video/x-raw,width=512,height=512,format=BGRx, framerate=10/1 ! videoconvert ! queue2 ! fpsdisplaysink ```
+* **Pipeline Config File** will be empty.
+* **Pipeline Use File** will be unchecked.
+* **Pipeline Autostart** will be checked.
+
+
+# GstAppSrc #
+
+The components `GstAppSrc` are named as `GstAppSrcRGB` and `GstAppSrcDepth` these components are related with `Scene Capture Components` 
+
 
 ![gst-plugin-ue4 blueprints](docs/media/GstAppSrc.png)
+![gst-plugin-ue4 blueprints](docs/media/GstAppSrcDepth.png)
 
-GstPipeline component: 
+*  **Pipeline Name** will be set as **robot**. 
+* **App Src Name** it will be set as `sensor_rgb` and `sensor_depth` respectively.
+* **App Src Enabled** will be set as **checked.** 
+* **Src Video** it will be set as **SceneCaptureRGB** and **SceneCaptureDepth.**
+* **Src Klv** Will Set as empty.
+
+
+# Scene Capture Component 2D (General)
+
+on Scene Capture component go to `Post Process Volume/Rendering/Features/Post process Materials/Array` 
+
+![gst-plugin-ue4 blueprints](docs/media/SceneCapture.png)
+![gst-plugin-ue4 blueprints](docs/media/SceneCaptureD.png)
+
+## Materials
+>![gst-plugin-ue4 blueprints](docs/media/M_SensorBGRA.png)
+>![gst-plugin-ue4 blueprints](docs/media/M_SensorDepth.png)
+
+
+ create a new array, on `choose` select  `asset reference`, then add the respectively Material `M_SensorBGRA` and `M_SensorDepth`.
+
+ # Scene Capture Component 2D (RGB)
+
+ Modify tab `Scene Capture`
+
+ ![gst-plugin-ue4 blueprints](docs/media/SceneCaptureRGB.png)
+
+ * On **Primitive Render Mode** select ` Render Scene Primitives` 
+ * On **Capture Source** select ` Final Color (LDR) in RGB` 
+
+
+# Scene Capture Component 2D (Depth)
+ Modify tab `Scene Capture`
+
+![gst-plugin-ue4 blueprints](docs/media/SceneCaptureDepth1.png)
+
  
-![gst-plugin-ue4 blueprints](docs/media/GstPipeline.png)
-
-Details panel:
-
-![gst-plugin-ue4 details panel](docs/media/details_panel.png)
+ * On **Capture Source** select ` Final Color (LDR) in RGB` 
