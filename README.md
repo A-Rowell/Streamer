@@ -185,7 +185,7 @@ Return to the BP that we create at the begin, and set Variable `Material` and th
 
  # Render Camera record on a mesh using SimboticTorch Plugin
 
-We will use the same configuration that we set on the section  [Render a local file on a mesh.](#render-a-local-file-on-a-mesh), adding a few steps from [gstappsrc](#gstappsrc).
+We will combine the configurations that we set on  [Render a local file on a mesh.](#render-a-local-file-on-a-mesh), and [gstappsrc](#gstappsrc), and the biggest change will be set on the Pipeline Config
 
 ## Modify BP.
 
