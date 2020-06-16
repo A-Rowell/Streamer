@@ -65,7 +65,7 @@ On Blueprints the Blueprint hierarchy you need:
 ![gst-plugin-ue4 blueprints](docs/media/BP_Components.png)
 
 # GstPipeline #
-![gst-plugin-ue4 blueprints](docs/media/GstPipelineConfig.png)
+![gst-plugin-ue4 blueprints](docs/media/GstPipelineConfigNew.png)
 
 *  `Pipeline Name` will be set as **robot**. 
 * **Pipeline config** will set as:
@@ -183,7 +183,7 @@ Return to the BP that we create at the begin, and set Variable `Material` and th
 
  ![gst-plugin-ue4 blueprints](docs/media/GST_SINK_PLANE_MAT.png)
 
- # Render Camera record on a mesh using SimboticTorch Plugin.
+ # Render Camera record on a mesh.
 
 We will combine the configurations that we set on  [Render a local file on a mesh.](#render-a-local-file-on-a-mesh), and [gstappsrc](#gstappsrc), and the biggest change will be set on the Pipeline Config.
 
@@ -198,9 +198,9 @@ On our BP we will add a gstappsrc (use the configuration of  [gstappsrc](#gstapp
 
 Our pipeline config will looks like this.
 
- ![gst-plugin-ue4 blueprints](docs/media/PipelineConfigCameraRender.png)
+ ![gst-plugin-ue4 blueprints](docs/media/PipelineConfigCameraRenderNew.png)
 
-```videomixer name=comp sink_0::ypos=0 sink_1::ypos=192 sink_2::ypos=384 !  videoconvert ! video/x-raw,format=(string)RGBA ! videoconvert ! appsink name=sink appsrc name=sensor_rgb caps=video/x-raw,width=640,height=192,format=BGRx,framerate=10/1 ! videoconvert !  queue2 ! aspectratiocrop aspect-ratio=10/3 ! videoscale ! videoconvert ! video/x-raw,format=RGB,width=640,height=192 ! tee name=t ! queue2 ! videoconvert ! comp. t. ! queue2 ! monodepth ! videoconvert ! comp. t. ! queue2 ! semseg ! videoconvert ! comp. ```
+```appsrc name=sensor_rgb caps=video/x-raw,width=512,height=512,format=BGRx,framerate=10/1 ! videoconvert !  queue2! videoconvert ! video/x-raw,format=(string)RGBA ! videoconvert ! appsink name=sink```
 
 ## GstAppSink
 
