@@ -187,7 +187,7 @@ Return to the BP that we create at the begin, and set Variable `Material` and th
 
 We will combine the configurations that we set on  [Render a local file on a mesh.](#render-a-local-file-on-a-mesh), and [gstappsrc](#gstappsrc), and the biggest change will be set on the Pipeline Config.
 
-## Modify BP.
+## Modify BP
 
 On our BP we will add a gstappsrc (use the configuration of  [gstappsrc](#gstappsrc)), add 2 sceneCapture, and name then as `SceneCaptureRGB` and `SceneCaptureDepth` (configuration for the SceneCapture is the same that we set on [SceneCapture](#scene-capture-component-2d-general)).
 
