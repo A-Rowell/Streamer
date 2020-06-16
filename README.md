@@ -67,7 +67,7 @@ On Blueprints the Blueprint hierarchy you need:
 # GstPipeline #
 ![gst-plugin-ue4 blueprints](docs/media/GstPipelineConfig.png)
 
-*  `Pipeline Name` will be set as **robot** 
+*  `Pipeline Name` will be set as **robot**. 
 * **Pipeline config** will set as:
 
 	> ``` appsrc name=sensor_rgb caps=video/x-raw,width=512,height=512,format=BGRx, framerate=10/1 ! videoconvert ! queue2 ! fpsdisplaysink ```
@@ -78,7 +78,7 @@ On Blueprints the Blueprint hierarchy you need:
 
 # GstAppSrc #
 
-The components `GstAppSrc` are named as `GstAppSrcRGB` and `GstAppSrcDepth` these components are related with `Scene Capture Components` 
+The components `GstAppSrc` are named as `GstAppSrcRGB` and `GstAppSrcDepth` these components are related with `Scene Capture Components`. 
 
 
 ![gst-plugin-ue4 blueprints](docs/media/GstAppSrc.png)
@@ -93,7 +93,7 @@ The components `GstAppSrc` are named as `GstAppSrcRGB` and `GstAppSrcDepth` thes
 
 # Scene Capture Component 2D (General).
 
-on Scene Capture component go to `Post Process Volume/Rendering/Features/Post process Materials/Array` 
+on Scene Capture component go to `Post Process Volume/Rendering/Features/Post process Materials/Array`.
 
 ![gst-plugin-ue4 blueprints](docs/media/SceneCapture.png)
 ![gst-plugin-ue4 blueprints](docs/media/SceneCaptureD.png)
@@ -107,28 +107,28 @@ on Scene Capture component go to `Post Process Volume/Rendering/Features/Post pr
 
  # Scene Capture Component 2D (RGB).
 
- Modify tab `Scene Capture`
+ Modify tab `Scene Capture`.
 
  ![gst-plugin-ue4 blueprints](docs/media/SceneCaptureRGB.png)
 
- * On **Primitive Render Mode** select ` Render Scene Primitives` 
- * On **Capture Source** select ` Final Color (LDR) in RGB` 
+ * On **Primitive Render Mode** select ` Render Scene Primitives` .
+ * On **Capture Source** select ` Final Color (LDR) in RGB` .
 
 
 # Scene Capture Component 2D (Depth).
- Modify tab `Scene Capture`
+ Modify tab `Scene Capture`.
 
 ![gst-plugin-ue4 blueprints](docs/media/SceneCaptureDepth1.png)
 
  
- * On **Capture Source** select ` Final Color (LDR) in RGB` 
+ * On **Capture Source** select ` Final Color (LDR) in RGB` .
 
 # Render a local file on a mesh.
  We will build a `BP` where we will add the following components.
 
-* GstPipeline
-* GstAppSink
-* Plane (mesh)
+* GstPipeline.
+* GstAppSink.
+* Plane (mesh).
 
  ![gst-plugin-ue4 blueprints](docs/media/BP_GST_COMPONENTS.png)
 
@@ -149,13 +149,13 @@ on Scene Capture component go to `Post Process Volume/Rendering/Features/Post pr
  
 ## GstAppSink.
 
-We need to add  the pipeline name that we defined before `robot` and the appsink that is set at the end of the pipeline config, it's called `sink`
+We need to add  the pipeline name that we defined before `robot` and the appsink that is set at the end of the pipeline config, it's called `sink`.
 
  ![gst-plugin-ue4 blueprints](docs/media/GST_SINK.png)
 
 ## Blueprint Event Graph.
 
- We need to add a variable, it type will be `Material Interface`, we will name it as `Material`
+ We need to add a variable, it type will be `Material Interface`, we will name it as `Material`.
  
  We will drag the GstAppSink component to the event Graph, from it pin we will generate a Get Texture Module, then using the variable we created before, generate a module type `Create Dynamic Material Instance`, Finally drag the `Plane` from BP components that we created at the begin, we will set a material on the plane.
 
@@ -175,21 +175,21 @@ Create a material (we will name it as (`GstRender`), inside of it, create a `Tex
 
 Return to the BP that we create at the begin, and set Variable `Material` and the plane material, with the material  we created.
 
-### Material
+### Material.
 
  ![gst-plugin-ue4 blueprints](docs/media/GST_SINK_VARIABLE_MAT.png)
 
- ### Plane
+ ### Plane.
 
  ![gst-plugin-ue4 blueprints](docs/media/GST_SINK_PLANE_MAT.png)
 
- # Render Camera record on a mesh using SimboticTorch Plugin
+ # Render Camera record on a mesh using SimboticTorch Plugin.
 
-We will combine the configurations that we set on  [Render a local file on a mesh.](#render-a-local-file-on-a-mesh), and [gstappsrc](#gstappsrc), and the biggest change will be set on the Pipeline Config
+We will combine the configurations that we set on  [Render a local file on a mesh.](#render-a-local-file-on-a-mesh), and [gstappsrc](#gstappsrc), and the biggest change will be set on the Pipeline Config.
 
 ## Modify BP.
 
-On our BP we will add a gstappsrc (use the configuration of  [gstappsrc](#gstappsrc)), add 2 sceneCapture, and name then as `SceneCaptureRGB` and `SceneCaptureDepth` (configuration for the SceneCapture is the same that we set on [SceneCapture](#scene-capture-component-2d-general))
+On our BP we will add a gstappsrc (use the configuration of  [gstappsrc](#gstappsrc)), add 2 sceneCapture, and name then as `SceneCaptureRGB` and `SceneCaptureDepth` (configuration for the SceneCapture is the same that we set on [SceneCapture](#scene-capture-component-2d-general)).
 
  ![gst-plugin-ue4 blueprints](docs/media/BPRenderCamera.png)
 
