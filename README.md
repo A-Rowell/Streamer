@@ -1,5 +1,14 @@
+
+
+
+
 ![gstreamer-plugin](docs/media/consume_stream.gif)
 
+# index
+* [Setup](#setup) 
+* [Usage](#Usage)
+* [Render a local file on a mesh.](#render-a-local-file-on-a-mesh)
+* [Render camera record on a mesh.](#render-camera-record-on-a-mesh-using-simbotictorch-plugin)
 # Setup
 
 Engine:
@@ -115,7 +124,7 @@ on Scene Capture component go to `Post Process Volume/Rendering/Features/Post pr
  * On **Capture Source** select ` Final Color (LDR) in RGB` 
 
 # Render a local file on a mesh.
- We will build a `BP` were we will add the following components.
+ We will build a `BP` where we will add the following components.
 
 * GstPipeline
 * GstAppSink
@@ -174,3 +183,31 @@ Return to the BP that we create at the begin, and set Variable `Material` and th
 
  ![gst-plugin-ue4 blueprints](docs/media/GST_SINK_PLANE_MAT.png)
 
+ # Render Camera record on a mesh using SimboticTorch Plugin
+
+We will use the same configuration that we set on the section  [Render a local file on a mesh.](#render-a-local-file-on-a-mesh), adding a few steps from [gstappsrc](#gstappsrc).
+
+## Modify BP.
+
+On our BP we will add a gstappsrc (use the configuration of  [gstappsrc](#gstappsrc)), add 2 sceneCapture, and name then as `SceneCaptureRGB` and `SceneCaptureDepth` (configuration for the SceneCapture is the same that we set on [SceneCapture](#scene-capture-component-2d-general))
+
+ ![gst-plugin-ue4 blueprints](docs/media/BPRenderCamera.png)
+
+
+## Modify pipeline config.
+
+Our pipeline config will looks like this.
+
+ ![gst-plugin-ue4 blueprints](docs/media/PipelineConfigCameraRender.png)
+
+```videomixer name=comp sink_0::ypos=0 sink_1::ypos=192 sink_2::ypos=384 !  videoconvert ! video/x-raw,format=(string)RGBA ! videoconvert ! appsink name=sink appsrc name=sensor_rgb caps=video/x-raw,width=640,height=192,format=BGRx,framerate=10/1 ! videoconvert !  queue2 ! aspectratiocrop aspect-ratio=10/3 ! videoscale ! videoconvert ! video/x-raw,format=RGB,width=640,height=192 ! tee name=t ! queue2 ! videoconvert ! comp. t. ! queue2 ! monodepth ! videoconvert ! comp. t. ! queue2 ! semseg ! videoconvert ! comp. ```
+
+## GstAppSink
+
+ ![gst-plugin-ue4 blueprints](docs/media/GST_SINK.png)
+
+
+## GstAppSrc
+
+![gst-plugin-ue4 blueprints](docs/media/GstAppSrc.png)
+![gst-plugin-ue4 blueprints](docs/media/GstAppSrcDepth.png)
