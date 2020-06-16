@@ -8,7 +8,7 @@
 * [Setup](#setup) 
 * [Usage](#Usage)
 * [Render a local file on a mesh.](#render-a-local-file-on-a-mesh)
-* [Render camera record on a mesh.](#render-camera-record-on-a-mesh-using-simbotictorch-plugin)
+* [Render camera record on a mesh.](#render-camera-record-on-a-mesh)
 # Setup
 
 Engine:
