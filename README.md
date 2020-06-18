@@ -161,7 +161,7 @@ We need to add  the pipeline name that we defined before `robot` and the appsink
 
 
 
- ![gst-plugin-ue4 blueprints](docs/media/BP_Event_Graph.png)
+ ![gst-plugin-ue4 blueprints](docs/media/BPEventGraph.png)
 
 
 ## Create Material To Render The Local File
