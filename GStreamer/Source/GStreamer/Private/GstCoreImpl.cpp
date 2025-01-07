@@ -8,9 +8,7 @@ extern "C"
 
 bool FGstCoreImpl::Init(const char *BinPath, const char *PluginPath)
 {
-    int argc = 0;
-    char **argv = nullptr;
-    gst_init(&argc, &argv);
+	gst_init(nullptr, nullptr);
 
     guint major, minor, micro, nano;
     gst_version(&major, &minor, &micro, &nano);

@@ -96,7 +96,7 @@ bool FGstAppSinkImpl::Connect(IGstPipeline *Pipeline, const char *ElementName, I
                                   "width", G_TYPE_INT, &m_Width,
                                   "height", G_TYPE_INT, &m_Height,
                                   "format", G_TYPE_STRING, &format,
-                                  "framerate", GST_TYPE_FRACTION, &fps_n, &fps_d,
+                                  "framerate", gst_fraction_get_type(), &fps_n, &fps_d,
                                   NULL))
             {
                 m_Framerate = fps_n / fps_d;
@@ -109,7 +109,7 @@ bool FGstAppSinkImpl::Connect(IGstPipeline *Pipeline, const char *ElementName, I
             }
             else if (g_str_equal(st_name, "meta/x-klv") && gst_structure_get(st,
                                                                              "parsed", G_TYPE_BOOLEAN, &klv_parsed,
-                                                                             "framerate", GST_TYPE_FRACTION, &fps_n, &fps_d,
+                                                                             "framerate", gst_fraction_get_type(), &fps_n, &fps_d,
                                                                              NULL))
             {
                 m_Framerate = fps_n / fps_d;

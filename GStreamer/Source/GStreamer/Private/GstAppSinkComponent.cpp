@@ -21,7 +21,7 @@ void UGstAppSinkComponent::BeginPlay()
     Super::BeginPlay();
 
     AActor *Actor = GetOwner();
-    TArray<UActorComponent *> Components = Actor->GetComponentsByClass(UActorComponent::StaticClass());
+    TSet<UActorComponent *> Components = Actor->GetComponents();
     for (UActorComponent *Component : Components)
     {
         if (Component->GetName() == SinkKlv)

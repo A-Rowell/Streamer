@@ -2,9 +2,9 @@
 #include "Runtime/Core/Public/Misc/Paths.h"
 
 #if PLATFORM_WINDOWS
-	#include "AllowWindowsPlatformTypes.h"
+	#include "Windows/AllowWindowsPlatformTypes.h"
 	#include <windows.h>
-	#include "HideWindowsPlatformTypes.h"
+	#include "Windows/HideWindowsPlatformTypes.h"
 #endif
 
 class FGStreamerLoaderModule : public IGStreamerLoaderModule

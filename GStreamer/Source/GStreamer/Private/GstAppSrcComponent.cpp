@@ -1,5 +1,6 @@
 #include "GstAppSrcComponent.h"
 #include "GstPipelineImpl.h"
+#include "TextureResource.h"
 #include "GameFramework/Actor.h"
 #include "Engine/TextureRenderTarget2D.h"
 #include "Runtime/Core/Public/Async/Async.h"
@@ -19,9 +20,9 @@ void UGstAppSrcComponent::BeginPlay()
     Super::BeginPlay();
 
     AActor *Actor = GetOwner();
-    TArray<UActorComponent *> Components = Actor->GetComponentsByClass(UActorComponent::StaticClass());
-    for (UActorComponent *Component : Components)
-    {
+	TSet<UActorComponent *> Components = Actor->GetComponents();
+	for (UActorComponent *Component : Components)
+	{
         if (Component->GetName() == SrcVideo)
         {
             SrcVideoComponent = Cast<USceneCaptureComponent2D>(Component);

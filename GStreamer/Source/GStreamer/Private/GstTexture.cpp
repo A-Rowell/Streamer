@@ -2,6 +2,8 @@
 #include "RenderUtils.h"
 #include "GstAppSinkImpl.h"
 #include "GstSampleImpl.h"
+#include "RenderingThread.h"
+#include "TextureResource.h"
 
 FGstTexture::FGstTexture(FString Name, IGstAppSink *AppSink, IGstTextureCallback *Callback)
 {
@@ -99,10 +101,10 @@ void FGstTexture::RenderCmd_UpdateTexture(IGstSample *Sample)
     SCOPED_PROFILER;
 
     auto Tex = GetTextureObject();
-    if (Tex && Tex->Resource)
+    if (Tex && Tex->GetResource())
     {
         RHIUpdateTexture2D(
-            ((FTexture2DResource *)Tex->Resource)->GetTexture2DRHI(),
+            Tex->GetResource()->GetTexture2DRHI(),
             0,
             FUpdateTextureRegion2D(0, 0, 0, 0, Sample->GetWidth(), Sample->GetHeight()),
             m_Pitch,
