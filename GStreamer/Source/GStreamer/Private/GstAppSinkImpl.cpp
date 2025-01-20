@@ -97,7 +97,7 @@ bool FGstAppSinkImpl::Connect(IGstPipeline *Pipeline, const char *ElementName, I
                                   "height", G_TYPE_INT, &m_Height,
                                   "format", G_TYPE_STRING, &format,
                                   "framerate", gst_fraction_get_type(), &fps_n, &fps_d,
-                                  NULL))
+                                  NULL)) 
             {
                 m_Framerate = fps_n / fps_d;
                 GST_LOG_DBG_A("GstAppSink: Found CAPS:%s width:%i height:%i format:%s fps:%i", st_name, m_Width, m_Height, format, m_Framerate);
